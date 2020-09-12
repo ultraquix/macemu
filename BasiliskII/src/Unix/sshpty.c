@@ -187,6 +187,10 @@ pty_allocate(int *ptyfd, int *ttyfd, char *namebuf, int namebuflen)
 	 * Push the appropriate streams modules, as described in Solaris pts(7).
 	 * HP-UX pts(7) doesn't have ttcompat module.
 	 */
+
+#ifndef I_PUSH
+#define I_PUSH TIOCPKT
+#endif
 	if (ioctl(*ttyfd, I_PUSH, "ptem") < 0)
 		error("ioctl I_PUSH ptem: %.100s", strerror(errno));
 	if (ioctl(*ttyfd, I_PUSH, "ldterm") < 0)

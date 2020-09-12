@@ -19,7 +19,6 @@
  */
 
 #include "sysdeps.h"
-
 /*
  *  NOTES concerning MacOS X issues:
  *  - poll() does not exist in 10.2.8, but is available in 10.4.4
@@ -50,9 +49,9 @@
 #include <signal.h>
 #include <map>
 
-#if defined(__FreeBSD__) || defined(sgi) || (defined(__APPLE__) && defined(__MACH__))
+/*#if defined(__FreeBSD__) || defined(sgi) || (defined(__APPLE__) && defined(__MACH__))*/
 #include <net/if.h>
-#endif
+/*#endif*/
 
 #if defined(HAVE_LINUX_IF_H) && defined(HAVE_LINUX_IF_TUN_H)
 #include <linux/if.h>
@@ -127,7 +126,7 @@ static VDECONN *vde_conn;
 #endif
 #ifdef SHEEPSHAVER
 static bool net_open = false;				// Flag: initialization succeeded, network device open
-static uint8 ether_addr[6];					// Our Ethernet address
+static ifreq ether_addr[6];					// Our Ethernet address
 #else
 const bool ether_driver_opened = true;		// Flag: is the MacOS driver opened?
 #endif
@@ -450,7 +449,7 @@ bool ether_init(void)
 		ether_addr[5] = 0x56;
 #endif
 	} else
-		ioctl(fd, SIOCGIFADDR, ether_addr);
+		ioctl(fd, SIOCGIFADDR, &ether_addr);
 	D(bug("Ethernet address %02x %02x %02x %02x %02x %02x\n", ether_addr[0], ether_addr[1], ether_addr[2], ether_addr[3], ether_addr[4], ether_addr[5]));
 
 	// Start packet reception thread
